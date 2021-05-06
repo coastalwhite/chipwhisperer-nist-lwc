@@ -1,0 +1,3 @@
+[submodule "chipwhisperer"]
+	path = chipwhisperer
+	url = git@github.com:newaetech/chipwhisperer
