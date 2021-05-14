@@ -111,8 +111,11 @@ int encrypt(uint8_t *output, unsigned long long *output_len,
   // Start measurement.
   trigger_high();
 
-  int ret = crypto_aead_encrypt(output, output_len, INPUT_BUF, INPUT_BUF_LEN,
+  int ret = -1;
+#if DO_ENCRYPT == 1
+  ret = crypto_aead_encrypt(output, output_len, INPUT_BUF, INPUT_BUF_LEN,
                                 AD_BUF, AD_BUF_LEN, 0, nonce, KEY);
+#endif
 
   // Stop measurement.
   trigger_low();
@@ -122,11 +125,16 @@ int encrypt(uint8_t *output, unsigned long long *output_len,
 
 int decrypt(uint8_t *output, unsigned long long *output_len,
             const uint8_t nonce[CRYPTO_NPUBBYTES]) {
+
   // Start measurement.
   trigger_high();
+  
+  int ret = -1;
 
-  int ret = crypto_aead_decrypt(output, output_len, 0, INPUT_BUF, INPUT_BUF_LEN,
+#if DO_DECRYPT == 1
+  ret = crypto_aead_decrypt(output, output_len, 0, INPUT_BUF, INPUT_BUF_LEN,
                                 AD_BUF, AD_BUF_LEN, nonce, KEY);
+#endif
 
   // Stop measurement.
   trigger_low();
@@ -197,8 +205,11 @@ uint8_t handle_hash(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf) {
   // Start power trace
   trigger_high();
 
+  int ret = -1;
+#if DO_HASH == 1
   // Perfrom hash
-  int ret = crypto_hash(output, INPUT_BUF, INPUT_BUF_LEN);
+  ret = crypto_hash(output, INPUT_BUF, INPUT_BUF_LEN);
+#endif
 
   // Stop power trace
   trigger_low();
@@ -229,7 +240,7 @@ uint8_t handle_hash(uint8_t cmd, uint8_t scmd, uint8_t len, uint8_t *buf) {
 uint8_t handle_buf(unsigned long long *dest_len, uint8_t *dest,
                    const uint8_t buffer_cmd, const unsigned long long MAX_SIZE,
                    const unsigned long long src_len, const uint8_t *src) {
-  uint8_t ret =
+  enum BUFFER_STATUS_CODE ret =
       buffer_interact(dest, dest_len, buffer_cmd, MAX_SIZE, src, src_len);
 
   if (ret == BSC_INVALID_COMMAND)
@@ -285,9 +296,9 @@ int main(void) {
   simpleserial_addcmd('p', CRYPTO_NPUBBYTES, handle_ed);
   simpleserial_addcmd('h', 0, handle_hash);
 
-  simpleserial_addcmd('k', SS_BUS_MAXSIZE, handle_key_buf);
-  simpleserial_addcmd('i', SS_BUS_MAXSIZE, handle_input_buf);
-  simpleserial_addcmd('a', SS_BUS_MAXSIZE, handle_ad_buf);
+  simpleserial_addcmd('k', 0, handle_key_buf);
+  simpleserial_addcmd('i', 0, handle_input_buf);
+  simpleserial_addcmd('a', 0, handle_ad_buf);
 
   simpleserial_addcmd('s', 0, handle_status);
 

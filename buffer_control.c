@@ -24,7 +24,7 @@ enum BUFFER_STATUS_CODE buffer_clear(uint8_t *output_buf,
                                      unsigned long long *output_len,
                                      const unsigned long long buf_size) {
   // Set the entire buffer to zeros
-  for (uint32_t i = 0; i < buf_size; ++i) {
+  for (unsigned long long i = 0; i < buf_size; ++i) {
     output_buf[i] = 0;
   }
 
@@ -40,14 +40,14 @@ enum BUFFER_STATUS_CODE buffer_append(uint8_t *output_buf,
                                       const uint8_t *input_buf,
                                       const unsigned long long input_len) {
   // Check if we are not having any overflows
-  if (*output_len + input_len > buf_size) {
+  if ((*output_len) + input_len > buf_size) {
     return BSC_OVERFLOW;
   }
 
   // Copy the data from the input buffer to the proper location in the output
   // buffer.
-  for (uint32_t i = 0; i < input_len; ++i) {
-    output_buf[*output_len + i] = input_buf[i];
+  for (unsigned long long i = 0; i < input_len; ++i) {
+    output_buf[(*output_len) + i] = input_buf[i];
   }
 
   *output_len += input_len;

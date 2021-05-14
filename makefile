@@ -36,13 +36,27 @@ TARGET_PATH = targets/$(TARGET_DIR)
 # This is the base name of the compiled .hex file.
 TARGET = $(TARGET_DIR)
 
+# Define whether to do encryption, decryption and/or hashing
+# 0: Don't include
+# 1: Include
+DO_ENCRYPT = 1
+DO_DECRYPT = 1
+DO_HASH = 0
+
 CRYPTO_TARGET = NONE
+
+CDEFS += -DDO_ENCRYPT=$(DO_ENCRYPT) \
+		 -DDO_DECRYPT=$(DO_DECRYPT) \
+		 -DDO_HASH=$(DO_HASH)
 
 # Import all header files from target path
 EXTRAINCDIRS += $(TARGET_PATH)
 
 # Load in all C files in the target dir
 SRC += $(wildcard $(TARGET_PATH)/*.c)
+# Custom selection of C files
+# SRC += $(TARGET_PATH)/encrypt.c $(TARGET_PATH)/...
+
 # Load in the wrapper C files
 SRC += buffer_control.c lwc_wrapper.c
 

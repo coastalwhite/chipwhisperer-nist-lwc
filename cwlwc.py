@@ -3,7 +3,7 @@ import random
 
 import chipwhisperer
 
-MAX_PAYLOAD_LENGTH = 192
+MAX_PAYLOAD_LENGTH = 100
 
 def return_ss_error(code, additional_info = ""):
     additional_info_txt = " ('{}')"
@@ -28,7 +28,7 @@ def return_ss_error(code, additional_info = ""):
     if len(additional_info) == 0:
         return_msg = return_msg.format("")
     else:
-        return_msg = return_msg.format(additional_info.format(additional_info))
+        return_msg = return_msg.format(additional_info_txt.format(additional_info))
 
     print(return_msg)
     quit(1)
@@ -37,7 +37,7 @@ class ReadCmd:
     is_filled = False
 
     def __init__(self, target):
-        res = target.read_cmd()
+        res = target.read_cmd(timeout=10000)
         if len(res) >= 4:
             self.cmd = res[1]
             if len(res) > 4:
@@ -159,20 +159,13 @@ class LWC_CW:
         # Send the SimpleSerial V2 command
         self.target.send_cmd(cmd, scmd, buf)
 
-    def _read_err(self):
-        result = ReadCmd(self.target)
-        if not result.is_cmd('e'):
-            quit("Wrong or no response was received (Err/Ack)")
-        
-        return result.data[0]
-
     def _read_and_handle_err(self, additional_info = ""):
-        err_code = self._read_err()
+        result = self.target.simpleserial_wait_ack(timeout=1000)
 
-        if err_code != 0:
-            return_ss_error(err_code, additional_info)
-
-        return err_code
+        if result is None:
+            quit("Device did not ack")
+        if result[0] != 0:
+            return_ss_error(result[0], additional_info)
 
     def _send_input_cmd(self, scmd, buf):
         self._send_cmd('i', scmd, buf)

@@ -20,6 +20,10 @@
 // compiling
 #ifdef PLATFORM
 #include "api.h"
+#else
+#define DO_ENCRYPT 1
+#define DO_DECRYPT 1
+#define DO_HASH 1
 #endif
 
 #define SS_BUS_MAXSIZE 192
