@@ -1,0 +1,14 @@
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.sym
+
+.dep
+objdir
+
+targets/*
+
+# You can append your own target if you don't want to include it
+!targets/dummy
