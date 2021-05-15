@@ -41,7 +41,7 @@ TARGET = $(TARGET_DIR)
 # 1: Include
 DO_ENCRYPT = 1
 DO_DECRYPT = 1
-DO_HASH = 0
+DO_HASH = 1
 
 CRYPTO_TARGET = NONE
 
@@ -74,7 +74,8 @@ ready_objdir:
 	mkdir -p objdir/$(TARGET_PATH)
 
 move_resultfiles:
-	mv $(TARGET-PLAT).* $(TARGET_PATH)
+	mkdir -p outputs/$(TARGET_DIR)
+	mv $(TARGET-PLAT).* outputs/$(TARGET_DIR)
 
 # -----------------------------------------------------------------------------
 #Add simpleserial project to build
