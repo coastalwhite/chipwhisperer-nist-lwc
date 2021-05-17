@@ -25,7 +25,13 @@ few steps to complete.
 
 Before we can start working with compiling NIST algorithms for your
 ChipWhisperer targets, you need the code of this repository. I suggest forking
-it, and then cloning it to your own pc.
+it, and then cloning it to your own pc. Remember that this repository uses
+submodules. Therefore, you need to run the following command to pull in the
+submodule.
+
+```bash
+git submodule update --init
+```
 
 ### 1. Adding the implementation to your targets
 
