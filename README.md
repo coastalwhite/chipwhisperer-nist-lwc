@@ -45,6 +45,11 @@ and header files.
 
 ### 2. Configuring the build process
 
+> **Note:** This building process expects you to have the proper C toolchain
+> installed. For more information take a look over
+> [here](https://chipwhisperer.readthedocs.io/en/latest/prerequisites.html#).
+> Under the compiler heading for your OS.
+
 The only configuration which needs to be done in order to compile a target
 algorithm is in the *makefile*. You have to select which target you want to
 compile (setting `TARGET_DIR` to the name of the folder in your *targets*),
